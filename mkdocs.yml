@@ -1,7 +1,7 @@
 site_name: Agentic Brand Content
 site_description: A declarative standard for publishers to serve structured brand context to AI agents.
 site_url: https://brandcontent.dev
-copyright: Spec v0.1 · 2026 · proposed by DoubleShift
+copyright: Agentic Brand Content · Spec v0.1 · Apache-2.0
 
 theme:
   name: material

@@ -18,12 +18,28 @@ publisher serves it a compact, structured *brand card* — sponsored context an 
 can surface in its answer. Humans see the page unchanged. The publisher gets paid
 for bot traffic it was giving away.
 
+## The fragment
+
+The core of ABC is the **brand fragment**: a provider exposes an endpoint that
+returns a brand card for AI-agent traffic and nothing for humans. The publisher
+inlines it on its existing CDN — a single `<esi:include>` tag (Akamai, Fastly,
+Varnish), or a small edge function (Cloudflare Worker, Lambda@Edge). No platform
+lock-in.
+
+A card is a single self-contained `<aside>` — a brand label, a short factual
+summary, a bullet block built for LLM ingestion, and source links. ~2 KB, under
+1 000 tokens, designed to fit an agent's context window. See the
+[card schema](schema/card.schema.json).
+
+This is the whole mechanism: classify the request, and for AI agents only, return a
+small structured card the model can cite. Everything else is convention around it.
+
 ## The declaration — `abc.txt`
 
-A publisher signals participation with a small file at the site root,
-`/abc.txt`. It declares which **providers** are authorized to supply brand content
-for AI agents on that site — the same transparency model as `ads.txt` /
-`sellers.json`, applied to the agentic web.
+Once a site serves fragments, it can declare participation publicly with a small
+file at the site root, `/abc.txt`. It lists which **providers** are authorized to
+supply brand content for AI agents on that site — the same transparency model as
+`ads.txt` / `sellers.json`, applied to the agentic web.
 
 ```text
 # abc.txt — Agentic Brand Content
@@ -35,7 +51,7 @@ doubleshift.to, DIRECT
 ```
 
 !!! note "Optional by design"
-    The file is not required — delivery works without it. Its presence is a
+    The file is not required — fragments are delivered without it. Its presence is a
     participation signal and the seed of a declarative, multi-provider ecosystem.
 
 ### Fields
@@ -47,18 +63,6 @@ doubleshift.to, DIRECT
 
 Optional `key=value` lines a publisher may add: `endpoint=` (a discovery URL for the
 fragment endpoint), `contact=`, `updated=`.
-
-## The delivery — brand fragments
-
-A provider exposes a **fragment endpoint** that returns a brand card for AI-agent
-traffic and nothing for humans. The publisher inlines it on its existing CDN — a
-single `<esi:include>` tag (Akamai, Fastly, Varnish), or a small edge function
-(Cloudflare Worker, Lambda@Edge). No platform lock-in.
-
-A card is a single self-contained `<aside>` — a brand label, a short factual
-summary, a bullet block built for LLM ingestion, and source links. ~2 KB, under
-1 000 tokens, designed to fit an agent's context window. See the
-[card schema](schema/card.schema.json).
 
 ## The provider
 
