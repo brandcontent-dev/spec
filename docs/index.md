@@ -81,7 +81,7 @@ supply brand content for AI agents on that site — the same transparency model 
 # Spec: https://brandcontent.dev
 
 # provider_domain, relationship
-doubleshift.to, DIRECT
+shftd2.com, RESELLER
 ```
 
 The file is optional — fragments are delivered without it.
@@ -90,8 +90,8 @@ The file is optional — fragments are delivered without it.
 
 | Field | Required | Meaning |
 |---|---|---|
-| `provider_domain` | yes | Root domain of an authorized brand-content provider. |
-| `relationship` | yes | `DIRECT` (contracted directly) or `RESELLER`. |
+| `provider_domain` | yes | Root domain of an authorized brand-content provider's system (e.g. `shftd2.com`). |
+| `relationship` | yes | `DIRECT` — the publisher controls the account directly; or `RESELLER` — the provider is authorized to resell brand content it sources on the publisher's behalf. |
 
 Optional `key=value` lines a publisher may add: `endpoint=` (a discovery URL for the
 fragment endpoint), `contact=`, `updated=`.

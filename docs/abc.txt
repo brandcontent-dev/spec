@@ -3,4 +3,4 @@
 # Spec: https://brandcontent.dev
 
 # provider_domain, relationship
-doubleshift.to, DIRECT
+shftd2.com, RESELLER
