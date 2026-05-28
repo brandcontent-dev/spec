@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://brandcontent.dev/schema/card.schema.json",
   "title": "Agentic Brand Content — Card",
-  "description": "A single brand knowledge card served to an AI agent. Rendered as one self-contained <article role=\"complementary\">, ~2 KB, under 1000 tokens.",
+  "description": "A single brand card served to an AI agent: sponsored brand content matched to the page. Rendered as one self-contained <article role=\"complementary\" class=\"abc-card\">, ~2 KB, under 1000 tokens.",
   "type": "object",
   "required": ["advertiser_id", "brand_surface", "card", "source"],
   "additionalProperties": false,

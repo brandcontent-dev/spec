@@ -1,7 +1,7 @@
 # Agentic Brand Content
 
-**A spec for publishers to serve structured brand context to AI agents — instead of
-giving their content away for free.**
+**A spec for publishers to serve AI agents sponsored brand content matched to the
+page — and get paid for bot traffic.**
 
 !!! info "Spec v0.1 · 2026-05-28"
     Early public draft. The format is usable today and open to feedback; details
@@ -10,13 +10,13 @@ giving their content away for free.**
 ## The problem
 
 AI agents (GPTBot, ClaudeBot, PerplexityBot…) read publisher pages to answer user
-questions. Publishers get nothing in return. Today's only options are to block the
-crawlers (`robots.txt`) or to let them take everything.
+questions. The publisher serves its content and gets nothing back.
 
-**Agentic Brand Content (ABC)** is a third path: when an AI agent reads a page, the
-publisher serves it a compact, structured *brand card* — sponsored context an agent
-can surface in its answer. Humans see the page unchanged. The publisher gets paid
-for bot traffic it was giving away.
+**Agentic Brand Content (ABC)** adds a paid layer on top. For AI-agent requests
+only, the publisher serves a compact *brand card*: sponsored brand content **matched
+to the page's topic** — a skincare brand on a beauty article, a carmaker on an auto
+review. Humans see the page unchanged. The publisher gets paid for the bot visit;
+the agent gets relevant, structured context.
 
 ## How it works
 
