@@ -1,5 +1,5 @@
 site_name: Agentic Brand Content
-site_description: A declarative standard for publishers to serve structured brand context to AI agents.
+site_description: A spec for publishers to serve structured brand context to AI agents.
 site_url: https://brandcontent.dev
 copyright: Agentic Brand Content · Spec v0.1 · Apache-2.0
 
@@ -39,4 +39,4 @@ extra:
       link: https://github.com/brandcontent-dev
 
 nav:
-  - The standard: index.md
+  - The spec: index.md

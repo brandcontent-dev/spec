@@ -1,7 +1,7 @@
 # Agentic Brand Content
 
-**A declarative standard for publishers to serve structured brand context to AI
-agents — instead of giving their content away for free.**
+**A spec for publishers to serve structured brand context to AI agents — instead of
+giving their content away for free.**
 
 !!! info "Spec v0.1 · 2026-05-28"
     Early public draft. The format is usable today and open to feedback; details
@@ -26,8 +26,9 @@ inlines it on its existing CDN — a single `<esi:include>` tag (Akamai, Fastly,
 Varnish), or a small edge function (Cloudflare Worker, Lambda@Edge). No platform
 lock-in.
 
-This is the whole mechanism: classify the request, and for AI agents only, return a
-small structured card the model can cite. Everything else is convention around it.
+The mechanism is simple: classify the request, and for AI agents only, add a small
+block of brand context — usually sponsored — alongside the page. Everything else is
+convention around it.
 
 ### The card
 
@@ -66,17 +67,29 @@ page URL and the visitor's `User-Agent` — and returns:
 Responses are cacheable, and MUST carry `Vary: User-Agent` when the endpoint
 classifies agents itself — so a CDN never serves an agent card to a human, or the
 reverse. The exact request parameters and selection logic are provider-defined; only
-this behavior is part of the standard.
+this behavior is part of the spec.
+
+## The provider
+
+A **provider** is the service a publisher authorizes to supply brand content for its
+AI-agent traffic. A provider:
+
+- runs the fragment endpoint and decides which brand is relevant to the page;
+- renders the card and keeps it within the token budget;
+- manages the brand relationships and the reporting behind it.
+
+The spec is provider-neutral: any service implementing a compatible fragment endpoint
+is a provider. A publisher authorizes its providers in `abc.txt` (next).
 
 ## The declaration — `abc.txt`
 
-Once a site serves fragments, it can declare participation publicly with a small
-file at the site root, `/abc.txt`. It lists which **providers** are authorized to
-supply brand content for AI agents on that site — the same transparency model as
-`ads.txt` / `sellers.json`, applied to the agentic web.
+Once a site serves fragments, it can declare participation publicly with a small file
+at the site root, `/abc.txt`. It lists which **providers** are authorized to supply
+brand content for AI agents on that site — the same transparency model as `ads.txt` /
+`sellers.json`, applied to the agentic web.
 
 ```text
-# abc.txt — Agentic Brand Content
+# abc.txt - Agentic Brand Content
 # Declares which providers may serve AI-agent brand context on this site.
 # Spec: https://brandcontent.dev
 
@@ -96,20 +109,7 @@ The file is optional — fragments are delivered without it.
 Optional `key=value` lines a publisher may add: `endpoint=` (a discovery URL for the
 fragment endpoint), `contact=`, `updated=`.
 
-## The provider
-
-A **provider** is the service a publisher authorizes to supply brand content for its
-AI-agent traffic. A provider:
-
-- runs the fragment endpoint and decides which brand is relevant to the page;
-- renders the card and keeps it within the token budget;
-- manages the brand relationships and the reporting behind it.
-
-A publisher lists its authorized providers in `abc.txt`. The standard is
-provider-neutral: any service implementing `abc.txt` and a compatible fragment
-endpoint is a provider.
-
 ---
 
-ABC is an open convention. Anyone may implement `abc.txt` and a compatible fragment
-endpoint. The standard is free to adopt; reference implementations are open-source.
+ABC is an open spec. Anyone may implement `abc.txt` and a compatible fragment
+endpoint; reference implementations are open-source.
