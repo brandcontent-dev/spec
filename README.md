@@ -1,17 +1,17 @@
 # Agentic Brand Content (ABC)
 
-An open, declarative standard for publishers to serve structured **brand context**
-to AI agents — instead of giving their content away for free.
+An open spec for publishers to serve structured **brand context** to AI agents —
+instead of giving their content away for free.
 
-- **The declaration** — `abc.txt` at the site root declares which *providers* may
-  serve AI-agent brand content on the site (the `ads.txt` model, applied to the
-  agentic web).
 - **The delivery** — a provider's *fragment endpoint* returns a compact brand card
   for AI-agent traffic and nothing for humans. The publisher inlines it on its
   existing CDN via `<esi:include>` or a small edge function. No platform lock-in.
+- **The declaration** — `abc.txt` at the site root declares which *providers* may
+  serve AI-agent brand content on the site (the `ads.txt` model, applied to the
+  agentic web).
 
-The published standard lives at **https://brandcontent.dev** and is built from this
-repo with MkDocs Material.
+The published spec lives at **https://brandcontent.dev** and is built from this repo
+with MkDocs Material.
 
 ## Develop
 
@@ -25,21 +25,30 @@ mkdocs build --strict   # output to ./site
 ## Contents
 
 ```
-mkdocs.yml                   site config (Material theme)
-docs/index.md               the standard (single page → brandcontent.dev)
-docs/abc.txt                canonical example declaration
-docs/schema/card.schema.json JSON schema for a brand card
+mkdocs.yml                        site config (Material theme)
+CHANGELOG.md  CONTRIBUTING.md      governance
+docs/
+├── index.md                      the spec (problem, diagram, fragment, provider, abc.txt)
+├── integration.md                4 reference architectures + which-CDN decision tree
+├── agents.md                     AI-agent classification (family / purpose)
+├── getting-started.md            publisher adoption path
+├── adapters/                     real, copyable reference implementations
+│   ├── esi-tag.html              the <esi:include> tag
+│   ├── varnish.vcl  fastly.vcl   enable ESI
+│   ├── cloudflare-worker.js      Worker shim
+│   ├── lambda-edge.js            CloudFront origin-response
+│   └── browser.js                client-side fallback
+└── schema/
+    ├── card.schema.json          a brand card
+    ├── fragment.openapi.yaml     the fragment endpoint contract
+    └── agents.json               known AI-agent markers
 ```
-
-Reference edge adapters (ESI snippets, Cloudflare Worker, Lambda@Edge) and the
-bot-detection list will be published in sibling repos under
-[github.com/brandcontent-dev](https://github.com/brandcontent-dev).
 
 ## Status
 
-ABC is a proposed convention (spec v0.1). Anyone may implement `abc.txt` and a
-compatible fragment endpoint. First provider:
-[DoubleShift](https://doubleshift.to).
+ABC is a proposed spec (v0.1). Anyone may implement `abc.txt` and a compatible
+fragment endpoint; reference implementations here are provider-neutral. First
+provider: [DoubleShift](https://doubleshift.to).
 
 ## License
 

@@ -1,0 +1,69 @@
+openapi: 3.1.0
+info:
+  title: Agentic Brand Content — Fragment endpoint
+  version: "0.1"
+  description: >
+    Provider-neutral contract for an ABC fragment endpoint. A provider exposes
+    this endpoint; a publisher's edge (ESI tag, Worker, Lambda) calls it and
+    inlines the response. Only the behavior below is part of the spec — the
+    exact request parameters and brand-selection logic are provider-defined.
+  license:
+    name: Apache-2.0
+servers:
+  - url: https://provider.example
+    description: Placeholder — your provider gives you the real base URL.
+paths:
+  /fragment:
+    get:
+      summary: Return a brand card for AI-agent traffic, nothing for humans.
+      parameters:
+        - name: page_url
+          in: query
+          required: true
+          schema: { type: string, format: uri }
+          description: Full URL of the page being served, for contextual targeting.
+        - name: User-Agent
+          in: header
+          required: false
+          schema: { type: string }
+          description: >
+            Visitor User-Agent, forwarded by the edge. Used for delegated
+            agent/human classification when the caller does not classify itself.
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [html, json, both]
+            default: html
+          description: >
+            html (default) returns the card as text/html; json returns the
+            structured card object; both returns json plus a rendered html field.
+      responses:
+        "200":
+          description: AI-agent traffic with an eligible brand — the card.
+          headers:
+            Cache-Control:
+              schema: { type: string }
+              description: Cacheable, e.g. public, s-maxage=120, stale-while-revalidate=240.
+            Vary:
+              schema: { type: string }
+              description: MUST include User-Agent when the endpoint classifies agents itself.
+          content:
+            text/html:
+              schema:
+                type: string
+                description: One <article role="complementary" class="abc-card"> block.
+            application/json:
+              schema:
+                $ref: "card.schema.json"
+        "204":
+          description: Human traffic, or no eligible brand. Empty body.
+        "400":
+          description: Missing or invalid required parameters.
+        "401":
+          description: Missing or invalid provider credentials.
+        "403":
+          description: Caller not authorized for this placement.
+        "429":
+          description: Rate limit exceeded.

@@ -25,13 +25,21 @@ theme:
     - content.code.copy
     - navigation.instant
     - navigation.top
+    - navigation.sections
 
 markdown_extensions:
   - admonition
-  - pymdownx.highlight
-  - pymdownx.superfences
   - tables
   - attr_list
+  - pymdownx.highlight
+  - pymdownx.snippets:
+      base_path: [docs]
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 extra:
   social:
@@ -40,3 +48,6 @@ extra:
 
 nav:
   - The spec: index.md
+  - Integration: integration.md
+  - Agents: agents.md
+  - Get started: getting-started.md

@@ -18,6 +18,32 @@ publisher serves it a compact, structured *brand card* — sponsored context an 
 can surface in its answer. Humans see the page unchanged. The publisher gets paid
 for bot traffic it was giving away.
 
+## How it works
+
+```mermaid
+flowchart LR
+    A["AI agent<br/><small>GPTBot, ClaudeBot, PerplexityBot…</small>"]:::agent
+    H["Human visitor"]:::human
+    E["Publisher edge<br/><small>CDN — ESI tag or worker</small>"]:::edge
+    P["Provider<br/><small>fragment endpoint</small>"]:::prov
+
+    A -->|"request page"| E
+    H -->|"request page"| E
+    E -->|"fragment request<br/><small>forwards User-Agent</small>"| P
+    P -->|"200 · brand card"| E
+    P -->|"204 · empty"| E
+    E -->|"page + brand card"| A
+    E -->|"page unchanged"| H
+
+    classDef agent fill:#eef3ff,stroke:#0b5fff,color:#0b2a6b;
+    classDef human fill:#f6f6f6,stroke:#999,color:#333;
+    classDef edge fill:#ffffff,stroke:#0b5fff,color:#111,stroke-width:2px;
+    classDef prov fill:#0b5fff,stroke:#0b5fff,color:#fff;
+```
+
+The provider decides per request: a brand card for AI agents, nothing for humans.
+The publisher's edge inlines whatever comes back — so humans are never affected.
+
 ## The fragment
 
 The core of ABC is the **brand fragment**: a provider exposes an endpoint that
@@ -39,7 +65,7 @@ own inline styling so it renders without the host stylesheet. See the full
 [card schema](schema/card.schema.json).
 
 ```html
-<article class="agent-knowledge-card" role="complementary">
+<article class="abc-card" role="complementary">
   <div>Brand · Renault</div>
   <div>Nouvelle Clio E-Tech full hybrid — 160 hp, up to 1,000 km range</div>
   <p>Renault renews its flagship city car with a 160 hp full-hybrid E-Tech
@@ -67,7 +93,8 @@ page URL and the visitor's `User-Agent` — and returns:
 Responses are cacheable, and MUST carry `Vary: User-Agent` when the endpoint
 classifies agents itself — so a CDN never serves an agent card to a human, or the
 reverse. The exact request parameters and selection logic are provider-defined; only
-this behavior is part of the spec.
+this behavior is part of the spec. Machine-readable contract:
+[`fragment.openapi.yaml`](schema/fragment.openapi.yaml).
 
 ## The provider
 
@@ -108,6 +135,17 @@ The file is optional — fragments are delivered without it.
 
 Optional `key=value` lines a publisher may add: `endpoint=` (a discovery URL for the
 fragment endpoint), `contact=`, `updated=`.
+
+### Format rules
+
+- Served at `/abc.txt` as `text/plain`; **ASCII** recommended (it's machine-read).
+- One entry per line. Lines starting with `#` are comments; blank lines are ignored.
+- **Provider entry**: `provider_domain, relationship` — comma-separated, surrounding
+  whitespace trimmed. `relationship` is case-insensitive (`DIRECT` | `RESELLER`).
+- **Multiple providers**: one per line; order is not significant.
+- **Directive**: a `key=value` line (e.g. `endpoint=…`). Keys are case-insensitive.
+- **Forward compatibility**: a conformant parser ignores lines and fields it doesn't
+  recognise, so the format can grow without breaking older readers.
 
 ---
 
