@@ -26,10 +26,18 @@ inlines it on its existing CDN — a single `<esi:include>` tag (Akamai, Fastly,
 Varnish), or a small edge function (Cloudflare Worker, Lambda@Edge). No platform
 lock-in.
 
-A card is a single self-contained `<aside>` — a brand label, a short factual
-summary, a bullet block built for LLM ingestion, and source links. ~2 KB, under
-1 000 tokens, designed to fit an agent's context window. See the
+A card is a single self-contained `<article role="complementary">` — a brand label,
+a short factual summary, a bullet block built for LLM ingestion, and source links.
+~2 KB, under 1 000 tokens, designed to fit an agent's context window. See the
 [card schema](schema/card.schema.json).
+
+!!! tip "Why `<article>`, not `<aside>`"
+    `<aside>` is actively down-weighted or stripped by boilerplate extractors
+    (Readability, trafilatura, newspaper3k) that sit in many RAG pipelines.
+    `<article>` is content-positive and survives them; `role="complementary"`
+    keeps the honest semantic. For maximum robustness against main-content
+    extractors, inline the card inside the page's `<main>` rather than as a
+    trailing sibling.
 
 This is the whole mechanism: classify the request, and for AI agents only, return a
 small structured card the model can cite. Everything else is convention around it.
