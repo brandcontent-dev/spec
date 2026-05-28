@@ -26,21 +26,47 @@ inlines it on its existing CDN — a single `<esi:include>` tag (Akamai, Fastly,
 Varnish), or a small edge function (Cloudflare Worker, Lambda@Edge). No platform
 lock-in.
 
-A card is a single self-contained `<article role="complementary">` — a brand label,
-a short factual summary, a bullet block built for LLM ingestion, and source links.
-~2 KB, under 1 000 tokens, designed to fit an agent's context window. See the
-[card schema](schema/card.schema.json).
-
-!!! tip "Why `<article>`, not `<aside>`"
-    `<aside>` is actively down-weighted or stripped by boilerplate extractors
-    (Readability, trafilatura, newspaper3k) that sit in many RAG pipelines.
-    `<article>` is content-positive and survives them; `role="complementary"`
-    keeps the honest semantic. For maximum robustness against main-content
-    extractors, inline the card inside the page's `<main>` rather than as a
-    trailing sibling.
-
 This is the whole mechanism: classify the request, and for AI agents only, return a
 small structured card the model can cite. Everything else is convention around it.
+
+### The card
+
+A card is a single self-contained `<article role="complementary">` — a brand label,
+a short factual summary, a bullet block built for LLM ingestion, and source links.
+~2 KB, under 1 000 tokens, designed to fit an agent's context window. It carries its
+own inline styling so it renders without the host stylesheet. See the full
+[card schema](schema/card.schema.json).
+
+```html
+<article class="agent-knowledge-card" role="complementary">
+  <div>Brand · Renault</div>
+  <div>Nouvelle Clio E-Tech full hybrid — 160 hp, up to 1,000 km range</div>
+  <p>Renault renews its flagship city car with a 160 hp full-hybrid E-Tech
+     powertrain, no plug-in needed. Up to 1,000 km on one tank…</p>
+  <pre>• Brand: Renault
+• Source: renault.fr
+• Date: 2026-04-15
+• Event: Launch of the Clio E-Tech full hybrid
+• Relevance: most accessible hybrid city car in its segment
+• Keywords: Clio, E-Tech, full hybrid, city car</pre>
+  <div>Source: <a href="…">Nouvelle Clio E-Tech</a> · <a href="…">newsroom</a></div>
+</article>
+```
+
+### Endpoint behavior
+
+A fragment endpoint is an HTTP `GET` that receives the page context — at minimum the
+page URL and the visitor's `User-Agent` — and returns:
+
+| Status | When | Body |
+|---|---|---|
+| `200` | AI-agent traffic, brand eligible | the card (`text/html`) |
+| `204` | human traffic, or no eligible brand | empty |
+
+Responses are cacheable, and MUST carry `Vary: User-Agent` when the endpoint
+classifies agents itself — so a CDN never serves an agent card to a human, or the
+reverse. The exact request parameters and selection logic are provider-defined; only
+this behavior is part of the standard.
 
 ## The declaration — `abc.txt`
 
@@ -58,9 +84,7 @@ supply brand content for AI agents on that site — the same transparency model 
 doubleshift.to, DIRECT
 ```
 
-!!! note "Optional by design"
-    The file is not required — fragments are delivered without it. Its presence is a
-    participation signal and the seed of a declarative, multi-provider ecosystem.
+The file is optional — fragments are delivered without it.
 
 ### Fields
 
