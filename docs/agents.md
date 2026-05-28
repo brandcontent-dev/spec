@@ -2,9 +2,8 @@
 
 ABC serves a card **only to AI agents**, and nothing to humans. "Agent" is decided
 from the request's `User-Agent`: if it matches a known AI-agent marker, the request
-gets a card. The list is intentionally conservative — only well-known,
-vendor-published markers — because the one failure mode that matters is showing
-sponsored content to a human.
+gets a card. The list stays conservative — only well-known, vendor-published
+markers — so a human is never mistaken for an agent.
 
 Matching is **word-boundary, case-insensitive**. The machine-readable list is
 [`schema/agents.json`](schema/agents.json).

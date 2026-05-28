@@ -134,7 +134,7 @@ fragment endpoint), `contact=`, `updated=`.
 
 ### Format rules
 
-- Served at `/abc.txt` as `text/plain`; **ASCII** recommended (it's machine-read).
+- Served at `/abc.txt` as `text/plain`, ASCII only.
 - One entry per line. Lines starting with `#` are comments; blank lines are ignored.
 - **Provider entry**: `provider_domain, relationship` — comma-separated, surrounding
   whitespace trimmed. `relationship` is case-insensitive (`DIRECT` | `RESELLER`).
