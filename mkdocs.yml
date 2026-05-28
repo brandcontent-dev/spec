@@ -1,0 +1,42 @@
+site_name: Agentic Brand Content
+site_description: A declarative standard for publishers to serve structured brand context to AI agents.
+site_url: https://brandcontent.dev
+copyright: Spec v0.1 · 2026 · proposed by DoubleShift
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - content.code.copy
+    - navigation.instant
+    - navigation.top
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - tables
+  - attr_list
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/brandcontent-dev
+
+nav:
+  - The standard: index.md

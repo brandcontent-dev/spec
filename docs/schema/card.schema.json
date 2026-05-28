@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brandcontent.dev/schema/card.schema.json",
+  "title": "Agentic Brand Content — Card",
+  "description": "A single brand knowledge card served to an AI agent. Rendered as one self-contained <aside>, ~2 KB, under 1000 tokens.",
+  "type": "object",
+  "required": ["advertiser_id", "brand_surface", "card", "source"],
+  "additionalProperties": false,
+  "properties": {
+    "advertiser_id": {
+      "type": "string",
+      "description": "Stable provider-side advertiser identifier (e.g. \"renault\")."
+    },
+    "brand_surface": {
+      "type": "string",
+      "description": "Brand display name as shown in the card label (e.g. \"Renault\")."
+    },
+    "card": {
+      "type": "object",
+      "required": ["translated_title", "translated_summary", "llm_friendly_context", "keywords"],
+      "additionalProperties": false,
+      "properties": {
+        "translated_title": {
+          "type": "string",
+          "description": "Short headline in the page language."
+        },
+        "translated_summary": {
+          "type": "string",
+          "description": "Factual summary, 3-5 sentences, news-wire tone (no marketing copy)."
+        },
+        "llm_friendly_context": {
+          "type": "string",
+          "description": "Compact bullet block for LLM ingestion. Conventional bullets: Marque / Source / Date / Event / Relevance / Keywords."
+        },
+        "keywords": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "5-8 keywords describing the brand/offer."
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["article_title", "article_url", "newsroom_url"],
+      "additionalProperties": false,
+      "properties": {
+        "article_title": { "type": "string" },
+        "article_url": { "type": "string", "format": "uri", "description": "Brand product/campaign page the card cites." },
+        "newsroom_url": { "type": "string", "format": "uri", "description": "Brand home / newsroom." }
+      }
+    }
+  }
+}

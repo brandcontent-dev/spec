@@ -1,0 +1,6 @@
+# abc.txt — Agentic Brand Content
+# Declares which providers may serve AI-agent brand context on this site.
+# Spec: https://brandcontent.dev
+
+# provider_domain, relationship
+doubleshift.to, DIRECT
