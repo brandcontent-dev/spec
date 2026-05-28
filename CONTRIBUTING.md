@@ -3,6 +3,8 @@
 Agentic Brand Content is an open spec. Proposals, corrections, and new reference
 adapters are welcome.
 
+Questions or to get involved: **contact@brandcontent.dev**, or open an issue.
+
 ## How to propose a change
 
 - **Spec or wording** — open an issue or PR against `docs/`. Explain the problem
