@@ -21,24 +21,20 @@ for bot traffic it was giving away.
 ## How it works
 
 ```mermaid
-flowchart LR
-    A["AI agent<br/><small>GPTBot, ClaudeBot, PerplexityBot…</small>"]:::agent
-    H["Human visitor"]:::human
-    E["Publisher edge<br/><small>CDN — ESI tag or worker</small>"]:::edge
-    P["Provider<br/><small>fragment endpoint</small>"]:::prov
-
-    A -->|"request page"| E
-    H -->|"request page"| E
-    E -->|"fragment request<br/><small>forwards User-Agent</small>"| P
-    P -->|"200 · brand card"| E
-    P -->|"204 · empty"| E
-    E -->|"page + brand card"| A
-    E -->|"page unchanged"| H
-
-    classDef agent fill:#eef3ff,stroke:#0b5fff,color:#0b2a6b;
-    classDef human fill:#f6f6f6,stroke:#999,color:#333;
-    classDef edge fill:#ffffff,stroke:#0b5fff,color:#111,stroke-width:2px;
-    classDef prov fill:#0b5fff,stroke:#0b5fff,color:#fff;
+sequenceDiagram
+    autonumber
+    participant V as Visitor
+    participant E as Publisher edge
+    participant P as Provider
+    V->>E: request page
+    E->>P: fragment request (forwards User-Agent)
+    alt request is an AI agent
+        P-->>E: 200 · brand card
+        E-->>V: page + brand card
+    else request is human
+        P-->>E: 204 · empty
+        E-->>V: page unchanged
+    end
 ```
 
 The provider decides per request: a brand card for AI agents, nothing for humans.
