@@ -2,3 +2,7 @@
 site/
 __pycache__/
 .DS_Store
+.wrangler/
+
+# Internal PM skill — not for the public repo
+.claude/
