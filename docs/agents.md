@@ -1,12 +1,12 @@
 # Agents
 
-ABC serves a card **only to AI agents**, and nothing to humans. "Agent" is decided
-from the request's `User-Agent`: if it matches a known AI-agent marker, the request
-gets a card. The list stays conservative — only well-known, vendor-published
-markers — so a human is never mistaken for an agent.
+ABC serves a card **only to AI agents**, and nothing to humans. Your edge makes that
+call: it matches the request's `User-Agent` against this list, and only a match
+triggers a fragment call. The list stays conservative — only well-known,
+vendor-published markers — so a human is never mistaken for an agent.
 
-Matching is **word-boundary, case-insensitive**. The machine-readable list is
-[`schema/agents.json`](schema/agents.json).
+Matching is **word-boundary, case-insensitive**. The machine-readable list your edge
+deploys is [`schema/agents.json`](schema/agents.json).
 
 ## Classification
 

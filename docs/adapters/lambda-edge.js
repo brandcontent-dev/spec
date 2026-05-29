@@ -1,8 +1,9 @@
 // ABC reference adapter — AWS Lambda@Edge (CloudFront)
 //
 // CloudFront has no native ESI. Attach this as an "origin-response" trigger
-// on your distribution: it fetches the brand fragment from your provider and
-// inlines it into HTML responses for AI agents. Humans get the page unchanged.
+// on your distribution: it classifies the request at the edge and, for AI
+// agents only, fetches the brand fragment from your provider and inlines it.
+// Humans get the page unchanged and never trigger a fragment call.
 //
 // Config: set FRAGMENT_ENDPOINT below to the full URL your provider gives you
 // (Lambda@Edge has no env vars — inline the value or read it from a config).
@@ -10,13 +11,15 @@
 // Notes / limits:
 //   - origin-response can modify the body; CloudFront caps a generated body
 //     at ~1 MB. Brand cards are ~2 KB, so the page size is the only concern.
-//   - The viewer User-Agent is available on the event; forward it so the
-//     provider can classify agent vs human.
 
 "use strict";
 const https = require("https");
 
 const FRAGMENT_ENDPOINT = "https://provider.example/fragment"; // your provider URL
+
+// Agent markers — keep in sync with schema/agents.json (word-boundary, case-insensitive).
+const AGENT_UA =
+  /\b(GPTBot|ChatGPT-User|OAI-SearchBot|ClaudeBot|Claude-Web|anthropic-ai|Google-Extended|Google-CloudVertexBot|Applebot-Extended|PerplexityBot|Perplexity-User|CCBot|Meta-ExternalAgent|meta-externalfetcher|FacebookBot|Bytespider|cohere-ai|YouBot|Diffbot|MistralAI-User|Amazonbot)\b/i;
 
 function fetchCard(pageUrl, userAgent) {
   return new Promise((resolve) => {
@@ -28,7 +31,7 @@ function fetchCard(pageUrl, userAgent) {
       (res) => {
         if (res.statusCode !== 200) {
           res.resume();
-          return resolve(""); // 204 = human / no-fill
+          return resolve(""); // 204 = no eligible brand (no-fill)
         }
         let body = "";
         res.on("data", (c) => (body += c));
@@ -48,6 +51,10 @@ exports.handler = async (event) => {
   if (!ct.includes("text/html") || !response.body) return response;
 
   const ua = (request.headers["user-agent"] || [{}])[0].value || "";
+  // Classify at the edge: only AI agents get a fragment call. The UA is then
+  // forwarded for the provider's reporting only (it does not affect the card).
+  if (!AGENT_UA.test(ua)) return response;
+
   const host = (request.headers["host"] || [{}])[0].value || "";
   const pageUrl = `https://${host}${request.uri}`;
 

@@ -11,10 +11,14 @@
   - onerror="continue": if the endpoint is slow or down, the page renders
     normally without the card.
 
-  You must also enable ESI processing on your text/html responses:
-    Akamai  — Property Manager → behavior "Edge Side Includes" → Enable
-    Fastly  — VCL: set beresp.do_esi = true;   (in vcl_fetch, text/html)
-    Varnish — VCL: set beresp.do_esi = true;   (in vcl_backend_response)
+  Enable ESI processing on your text/html responses, gated on the User-Agent
+  so the include resolves ONLY for AI agents — a human request is never
+  enriched and never calls the provider. Match against the published agent
+  list (schema/agents.json):
+    Akamai  — Property Manager → match on User-Agent (agent list) → behavior
+              "Edge Side Includes" → Enable
+    Fastly  — adapters/fastly.vcl  (gates beresp.do_esi on an agent-UA match)
+    Varnish — adapters/varnish.vcl (gates beresp.do_esi on an agent-UA match)
 -->
 <esi:include
   src="https://provider.example/fragment?page_url=$(HTTP_HOST)$(REQUEST_PATH)"

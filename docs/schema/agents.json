@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://brandcontent.dev/schema/agents.json",
   "title": "Agentic Brand Content — known AI agents",
-  "description": "Reference list of AI-agent User-Agent markers, by vendor family and purpose. A request whose User-Agent matches a marker (word-boundary, case-insensitive) is treated as an AI agent. Conservative by design: only well-known, vendor-published markers. purpose drives differentiated pricing: query > search > training by intent.",
+  "description": "Reference list of AI-agent User-Agent markers, by vendor family and purpose. The publisher's edge matches a request's User-Agent against these markers (word-boundary, case-insensitive); a match is treated as an AI agent and triggers a fragment call. Conservative by design: only well-known, vendor-published markers. purpose drives differentiated pricing: query > search > training by intent.",
   "version": "0.1",
   "updated": "2026-05-28",
   "purposes": {

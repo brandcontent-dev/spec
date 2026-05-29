@@ -15,7 +15,7 @@ servers:
 paths:
   /fragment:
     get:
-      summary: Return a brand card for AI-agent traffic, nothing for humans.
+      summary: Return a brand card for a page. The edge calls this for AI-agent traffic only.
       parameters:
         - name: page_url
           in: query
@@ -27,8 +27,10 @@ paths:
           required: false
           schema: { type: string }
           description: >
-            Visitor User-Agent, forwarded by the edge. Used for delegated
-            agent/human classification when the caller does not classify itself.
+            Visitor User-Agent, optionally forwarded by the edge for the
+            provider's reporting (bot family / purpose). The edge has already
+            classified the request, so this is NOT used for classification and
+            is NOT part of the cache key.
         - name: format
           in: query
           required: false
@@ -41,14 +43,14 @@ paths:
             structured card object; both returns json plus a rendered html field.
       responses:
         "200":
-          description: AI-agent traffic with an eligible brand — the card.
+          description: A brand is eligible for the page — the card.
           headers:
             Cache-Control:
               schema: { type: string }
-              description: Cacheable, e.g. public, s-maxage=120, stale-while-revalidate=240.
-            Vary:
-              schema: { type: string }
-              description: MUST include User-Agent when the endpoint classifies agents itself.
+              description: >
+                Cacheable by URL, e.g. public, s-maxage=120,
+                stale-while-revalidate=240. No Vary: User-Agent — the edge
+                classifies, so every request here is already an agent.
           content:
             text/html:
               schema:
@@ -58,7 +60,7 @@ paths:
               schema:
                 $ref: "card.schema.json"
         "204":
-          description: Human traffic, or no eligible brand. Empty body.
+          description: No eligible brand for this page (no-fill). Empty body.
         "400":
           description: Missing or invalid required parameters.
         "401":

@@ -22,8 +22,9 @@ Add the fragment to your pages on the path that matches your CDN — see
 - **CloudFront** → a Lambda@Edge function.
 - **No CDN control** → a browser-JS fallback.
 
-The provider classifies each request from the `User-Agent`: a card for AI agents
-(`200`), nothing for humans (`204`). Your human visitors see the page unchanged.
+Your edge classifies each request from the `User-Agent` (the [agent list](agents.md))
+and fetches a card for AI agents only. Your human visitors never trigger a fragment
+call and see the page unchanged.
 
 ## 3. Declare it (optional)
 
@@ -33,7 +34,7 @@ site root listing your provider(s):
 ```text
 # abc.txt - Agentic Brand Content
 # Spec: https://brandcontent.dev
-provider.example, RESELLER
+provider.example, acct-123, RESELLER
 ```
 
 This is optional — fragments are delivered without it — but it makes your

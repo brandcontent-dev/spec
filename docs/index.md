@@ -18,6 +18,10 @@ to the page's topic** — a skincare brand on a beauty article, a carmaker on an
 review. Humans see the page unchanged. The publisher gets paid for the bot visit;
 the agent gets relevant, structured context.
 
+ABC is **additive**: it neither blocks nor licenses a publisher's own content — the
+agent still reads the page. It sits alongside access and content-licensing standards,
+not in place of them.
+
 ## How it works
 
 ```mermaid
@@ -27,30 +31,31 @@ sequenceDiagram
     participant E as Publisher edge
     participant P as Provider
     V->>E: request page
-    E->>P: fragment request (forwards User-Agent)
-    alt request is an AI agent
+    Note over E: classify by User-Agent
+    alt AI agent
+        E->>P: fragment request (UA forwarded, for reporting)
         P-->>E: 200 · brand card
         E-->>V: page + brand card
-    else request is human
-        P-->>E: 204 · empty
+    else human
         E-->>V: page unchanged
     end
 ```
 
-The provider decides per request: a brand card for AI agents, nothing for humans.
-The publisher's edge inlines whatever comes back — so humans are never affected.
+The publisher's edge classifies each request by its `User-Agent`: for AI-agent
+traffic it fetches a brand card from the provider and inlines it; human traffic never
+reaches the provider, and the page is served unchanged.
 
 ## The fragment
 
 The core of ABC is the **brand fragment**: a provider exposes an endpoint that
-returns a brand card for AI-agent traffic and nothing for humans. The publisher
-inlines it on its existing CDN — a single `<esi:include>` tag (Akamai, Fastly,
-Varnish), or a small edge function (Cloudflare Worker, Lambda@Edge). No platform
-lock-in.
+returns a brand card for a given page. The publisher's edge classifies the request
+and, for AI-agent traffic only, fetches the fragment and inlines it on its existing
+CDN — a single `<esi:include>` tag (Akamai, Fastly, Varnish), or a small edge
+function (Cloudflare Worker, Lambda@Edge). No platform lock-in.
 
-The mechanism is simple: classify the request, and for AI agents only, add a small
-block of brand context — usually sponsored — alongside the page. Everything else is
-convention around it.
+The mechanism is simple: classify the request at the edge, and for AI agents only,
+add a small block of brand content — usually sponsored — alongside the page.
+Everything else is convention around it.
 
 ### The card
 
@@ -78,18 +83,20 @@ own inline styling so it renders without the host stylesheet. See the full
 
 ### Endpoint behavior
 
-A fragment endpoint is an HTTP `GET` that receives the page context — at minimum the
-page URL and the visitor's `User-Agent` — and returns:
+The edge calls the fragment endpoint only for AI-agent traffic, so the endpoint is an
+HTTP `GET` that receives the page context — at minimum the page URL — and returns:
 
 | Status | When | Body |
 |---|---|---|
-| `200` | AI-agent traffic, brand eligible | the card (`text/html`) |
-| `204` | human traffic, or no eligible brand | empty |
+| `200` | a brand is eligible for the page | the card (`text/html`) |
+| `204` | no eligible brand (no-fill) | empty |
 
-Responses are cacheable, and MUST carry `Vary: User-Agent` when the endpoint
-classifies agents itself — so a CDN never serves an agent card to a human, or the
-reverse. The exact request parameters and selection logic are provider-defined; only
-this behavior is part of the spec. Machine-readable contract:
+Because every request that reaches the endpoint is already an agent, the response
+depends only on the page and context — it is cacheable by URL, with **no
+`Vary: User-Agent`**. The visitor's `User-Agent` may be forwarded for the provider's
+reporting (bot family / purpose), but it does not change the card and is not part of
+the cache key. The exact request parameters and selection logic are provider-defined;
+only this behavior is part of the spec. Machine-readable contract:
 [`fragment.openapi.yaml`](schema/fragment.openapi.yaml).
 
 ## The provider
@@ -113,11 +120,11 @@ brand content for AI agents on that site — the same transparency model as `ads
 
 ```text
 # abc.txt - Agentic Brand Content
-# Declares which providers may serve AI-agent brand context on this site.
+# Declares which providers may serve AI-agent brand content on this site.
 # Spec: https://brandcontent.dev
 
-# provider_domain, relationship
-shftd2.com, RESELLER
+# provider_domain, account_id, relationship
+shftd2.com, p1, RESELLER
 ```
 
 The file is optional — fragments are delivered without it.
@@ -127,6 +134,7 @@ The file is optional — fragments are delivered without it.
 | Field | Required | Meaning |
 |---|---|---|
 | `provider_domain` | yes | Root domain of an authorized brand-content provider's system (e.g. `shftd2.com`). |
+| `account_id` | yes | The publisher's account at that provider. It disambiguates the line: the same provider can appear more than once — e.g. a `DIRECT` account the publisher runs itself, plus a `RESELLER` account the provider fills on its behalf. An identifier, not a secret. |
 | `relationship` | yes | `DIRECT` — the publisher controls the account directly; or `RESELLER` — the provider is authorized to resell brand content it sources on the publisher's behalf. |
 
 Optional `key=value` lines a publisher may add: `endpoint=` (a discovery URL for the
@@ -136,12 +144,15 @@ fragment endpoint), `contact=`, `updated=`.
 
 - Served at `/abc.txt` as `text/plain`, ASCII only.
 - One entry per line. Lines starting with `#` are comments; blank lines are ignored.
-- **Provider entry**: `provider_domain, relationship` — comma-separated, surrounding
-  whitespace trimmed. `relationship` is case-insensitive (`DIRECT` | `RESELLER`).
-- **Multiple providers**: one per line; order is not significant.
+- **Provider entry**: `provider_domain, account_id, relationship` — comma-separated,
+  surrounding whitespace trimmed. `relationship` is case-insensitive (`DIRECT` | `RESELLER`).
+- **Multiple entries**: one per line; order is not significant. The same
+  `provider_domain` may appear more than once with different `account_id` /
+  `relationship` pairs (e.g. a `DIRECT` account the publisher runs itself plus a `RESELLER` account).
 - **Directive**: a `key=value` line (e.g. `endpoint=…`). Keys are case-insensitive.
-- **Forward compatibility**: a conformant parser ignores lines and fields it doesn't
-  recognise, so the format can grow without breaking older readers.
+- **Forward compatibility**: any new field is appended at the end of a line, and a
+  conformant parser ignores lines and fields it doesn't recognise — so the format can
+  grow without breaking older readers.
 
 ---
 

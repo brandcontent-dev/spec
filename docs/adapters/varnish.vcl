@@ -1,19 +1,22 @@
 # ABC reference adapter — Varnish (self-hosted)
 #
-# Enable ESI processing on HTML responses. The <esi:include> tag in your
-# template (see esi-tag.html) is then resolved by Varnish at the edge.
+# Resolve the <esi:include> tag (see esi-tag.html) ONLY for AI agents, so a
+# human request never triggers a fragment call. Classification is a single
+# User-Agent match against the published agent list (schema/agents.json) —
+# keep this regex in sync with that file.
 #
 # Drop this into your existing VCL.
 
 sub vcl_backend_response {
-    if (beresp.http.Content-Type ~ "text/html") {
+    if (beresp.http.Content-Type ~ "text/html" &&
+        bereq.http.User-Agent ~ "(?i)(GPTBot|ChatGPT-User|OAI-SearchBot|ClaudeBot|Claude-Web|anthropic-ai|Google-Extended|Google-CloudVertexBot|Applebot-Extended|PerplexityBot|Perplexity-User|CCBot|Meta-ExternalAgent|meta-externalfetcher|FacebookBot|Bytespider|cohere-ai|YouBot|Diffbot|MistralAI-User|Amazonbot)") {
         set beresp.do_esi = true;
     }
 }
 
-# Varnish forwards the client User-Agent to the ESI subrequest by default,
-# so the provider can classify agent vs human. If your setup strips it,
-# re-attach it explicitly on the fragment subrequest:
+# The client User-Agent is forwarded to the fragment subrequest by default
+# (the provider may use it for reporting, not classification). If your setup
+# strips it, re-attach it on the /fragment subrequest:
 #
 # sub vcl_backend_fetch {
 #     if (bereq.url ~ "/fragment") {

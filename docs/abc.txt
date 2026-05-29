@@ -1,6 +1,6 @@
 # abc.txt - Agentic Brand Content
-# Declares which providers may serve AI-agent brand context on this site.
+# Declares which providers may serve AI-agent brand content on this site.
 # Spec: https://brandcontent.dev
 
-# provider_domain, relationship
-shftd2.com, RESELLER
+# provider_domain, account_id, relationship
+shftd2.com, p1, RESELLER

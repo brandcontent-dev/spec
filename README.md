@@ -1,11 +1,13 @@
 # Agentic Brand Content (ABC)
 
-An open spec for publishers to serve structured **brand context** to AI agents —
-instead of giving their content away for free.
+An open spec for publishers to serve AI agents sponsored **brand content** matched to
+the page — and get paid for bot traffic. It adds a paid layer; the agent still reads
+the page.
 
-- **The delivery** — a provider's *fragment endpoint* returns a compact brand card
-  for AI-agent traffic and nothing for humans. The publisher inlines it on its
-  existing CDN via `<esi:include>` or a small edge function. No platform lock-in.
+- **The delivery** — the publisher's edge classifies the request and, for AI agents
+  only, fetches a compact brand card from a provider's *fragment endpoint* and inlines
+  it on its existing CDN via `<esi:include>` or a small edge function. Humans see the
+  page unchanged. No platform lock-in.
 - **The declaration** — `abc.txt` at the site root declares which *providers* may
   serve AI-agent brand content on the site (the `ads.txt` model, applied to the
   agentic web).
