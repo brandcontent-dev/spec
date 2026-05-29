@@ -51,7 +51,7 @@ extra:
       name: contact@brandcontent.dev
 
 nav:
-  - Agentic Brand Content: index.md
+  - Home: index.md
   - Integration: integration.md
   - Agents: agents.md
   - Get started: getting-started.md
