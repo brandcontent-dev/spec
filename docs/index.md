@@ -115,8 +115,8 @@ is a provider. A publisher authorizes its providers in `abc.txt` (next).
 
 Once a site serves fragments, it can declare participation publicly with a small file
 at the site root, `/abc.txt`. It lists which **providers** are authorized to supply
-brand content for AI agents on that site — the same transparency model as `ads.txt` /
-`sellers.json`, applied to the agentic web.
+brand content for AI agents on that site — the same transparency model as `ads.txt`,
+applied to the agentic web.
 
 ```text
 # abc.txt - Agentic Brand Content
@@ -129,30 +129,11 @@ shftd2.com, p1, RESELLER
 
 The file is optional — fragments are delivered without it.
 
-### Fields
-
-| Field | Required | Meaning |
-|---|---|---|
-| `provider_domain` | yes | Root domain of an authorized brand-content provider's system (e.g. `shftd2.com`). |
-| `account_id` | yes | The publisher's account at that provider. It disambiguates the line: the same provider can appear more than once — e.g. a `DIRECT` account the publisher runs itself, plus a `RESELLER` account the provider fills on its behalf. An identifier, not a secret. |
-| `relationship` | yes | `DIRECT` — the publisher controls the account directly; or `RESELLER` — the provider is authorized to resell brand content it sources on the publisher's behalf. |
-
-Optional `key=value` lines a publisher may add: `endpoint=` (a discovery URL for the
-fragment endpoint), `contact=`, `updated=`.
-
-### Format rules
-
-- Served at `/abc.txt` as `text/plain`, ASCII only.
-- One entry per line. Lines starting with `#` are comments; blank lines are ignored.
-- **Provider entry**: `provider_domain, account_id, relationship` — comma-separated,
-  surrounding whitespace trimmed. `relationship` is case-insensitive (`DIRECT` | `RESELLER`).
-- **Multiple entries**: one per line; order is not significant. The same
-  `provider_domain` may appear more than once with different `account_id` /
-  `relationship` pairs (e.g. a `DIRECT` account the publisher runs itself plus a `RESELLER` account).
-- **Directive**: a `key=value` line (e.g. `endpoint=…`). Keys are case-insensitive.
-- **Forward compatibility**: any new field is appended at the end of a line, and a
-  conformant parser ignores lines and fields it doesn't recognise — so the format can
-  grow without breaking older readers.
+Each line is `provider_domain, account_id, relationship` — `DIRECT` if the publisher
+controls the account, `RESELLER` if the provider resells on its behalf. The file is
+`text/plain`, ASCII; `#` starts a comment. The `account_id` is the publisher's account
+at that provider, so the same provider can appear on more than one line (a `DIRECT` and
+a `RESELLER` line). A parser ignores fields it doesn't recognise, so the format can grow.
 
 ---
 
