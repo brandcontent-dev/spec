@@ -33,7 +33,7 @@ sequenceDiagram
     V->>E: request page
     Note over E: classify by User-Agent
     alt AI agent
-        E->>P: fragment request (UA forwarded, for reporting)
+        E->>P: fragment request
         P-->>E: 200 · brand card
         E-->>V: page + brand card
     else human
