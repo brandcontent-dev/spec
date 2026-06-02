@@ -138,39 +138,6 @@ controls the account, `RESELLER` if the provider resells on its behalf. The file
 at that provider, so the same provider can appear on more than one line (a `DIRECT` and
 a `RESELLER` line). A parser ignores fields it doesn't recognise, so the format can grow.
 
-## Why now?
-
-Web navigation is becoming agentic. In 2025, AI bots averaged 4.2% of all HTML page
-requests, with Googlebot a further 4.5% [1] — a material, measurable share, against a
-backdrop where automated traffic now exceeds human traffic on the web overall [2]. The
-fastest-growing slice is not bulk training but live, on-demand fetching: Cloudflare's
-"user action" crawling — pages retrieved in real time in response to a user's prompt —
-grew more than 15x over 2025 [1]. It is shipping as product, too: OpenAI rolled out its
-web-navigating agent, Operator, to several countries in early 2025 [3]; Perplexity made
-its agentic Comet browser free worldwide on 2 October 2025 [4]; and Google's Project
-Mariner, which runs up to ten web tasks at once, expanded at I/O 2025 [5].
-
-The economics are moving with it: AI platforms drove 1.13 billion referral visits in
-June 2025, up 357% year-over-year [6], while Google search traffic to publishers fell by
-roughly a third in the year to November 2025 [7], and when Google shows an AI summary,
-users click a result in just 8% of visits versus 15% without [8]. The temper is honest:
-as of mid-2025 about 80% of AI crawling was still for model training, with real-time
-user-action fetches at just 2% [9] — agentic browsing is scaling fast, but is not yet the
-dominant mode. ABC lets a publisher be paid for each AI-agent visit it already serves —
-today, while the agentic web is still being built.
-
-**References**
-
-1. Cloudflare, *Radar 2025 Year in Review* (AI bots 4.2% of HTML requests, Googlebot 4.5%; "AI 'user action' crawling increased by over 15x in 2025"), 15 Dec 2025. <https://blog.cloudflare.com/radar-2025-year-in-review/>
-2. Imperva (Thales), *2025 Bad Bot Report* (automated traffic = 51% of web traffic in 2024), 15 Apr 2025. <https://www.imperva.com/blog/2025-imperva-bad-bot-report-how-ai-is-supercharging-the-bot-threat/>
-3. TechCrunch, *OpenAI rolls out its AI agent Operator in several countries*, 21 Feb 2025. <https://techcrunch.com/2025/02/21/openai-rolls-out-its-ai-agent-operator-in-several-countries/>
-4. PPC Land, *Perplexity releases Comet browser globally at no cost*, 3 Oct 2025. <https://ppc.land/perplexity-releases-comet-browser-globally-at-no-cost-after-three-month-limited-rollout/>
-5. TechCrunch, *Google rolls out Project Mariner, its web-browsing AI agent*, 20 May 2025. <https://techcrunch.com/2025/05/20/google-rolls-out-project-mariner-its-web-browsing-ai-agent/>
-6. Similarweb, *AI referral traffic winners*, 29 Jul 2025. <https://www.similarweb.com/blog/insights/ai-news/ai-referral-traffic-winners/>
-7. Chartbeat / Reuters Institute, reported by Press Gazette, 12 Jan 2026 (data to Nov 2025). <https://pressgazette.co.uk/media-audience-and-business-data/google-traffic-down-2025-trends-report-2026/>
-8. Pew Research Center, *Google users are less likely to click on links when an AI summary appears in the results*, 22 Jul 2025. <https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/>
-9. Cloudflare, *The crawl-to-click gap: Cloudflare data on AI bots, training, and referrals*, 29 Aug 2025. <https://blog.cloudflare.com/crawlers-click-ai-bots-training/>
-
 ---
 
 ABC is an open spec. Anyone may implement `abc.txt` and a compatible fragment
