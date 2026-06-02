@@ -12,9 +12,9 @@ renders the card, and handles the brand deals and reporting. It gives you a
 The spec is provider-neutral — any service implementing a compatible
 [fragment endpoint](schema/fragment.openapi.yaml) works.
 
-## 2. Inline the fragment
+## 2. Inline the card
 
-Add the fragment to your pages on the path that matches your CDN — see
+Add the card to your pages on the path that matches your CDN — see
 [Integration](integration.md):
 
 - **Akamai / Fastly / Varnish** → one `<esi:include>` tag, no code.
@@ -23,8 +23,8 @@ Add the fragment to your pages on the path that matches your CDN — see
 - **No CDN control** → a browser-JS fallback.
 
 Your edge classifies each request from the `User-Agent` (the [agent list](agents.md))
-and fetches a card for AI agents only. Your human visitors never trigger a fragment
-call and see the page unchanged.
+and fetches a card for AI agents only. Your human visitors never trigger a card
+request and see the page unchanged.
 
 ## 3. Declare it (optional)
 
@@ -37,7 +37,7 @@ site root listing your provider(s):
 provider.example, acct-123, RESELLER
 ```
 
-This is optional — fragments are delivered without it — but it makes your
+This is optional — cards are delivered without it — but it makes your
 participation and authorized providers public, the same way `ads.txt` does.
 
 ## Verify

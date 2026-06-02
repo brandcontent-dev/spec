@@ -5,12 +5,21 @@ The spec follows a simple `MAJOR.MINOR` version: `MINOR` for additive or
 clarifying changes, `MAJOR` once the `abc.txt` format and fragment contract
 are frozen.
 
+## Unreleased
+
+- Vocabulary: the deliverable is the **card**; "fragment" now refers only to the
+  provider's **fragment endpoint** (the channel the edge calls).
+- Add a **"Why now?"** section with cited 2025-2026 evidence on the agentic web.
+- Add **agent-verification** guidance (reverse-DNS, published IP ranges, CDN
+  verified-bot signals) as the site's responsibility.
+- Surface the Integration guide from the home page; number the How-it-works diagram.
+
 ## 0.1 — 2026-05-28
 
 First public draft.
 
 - `abc.txt` declaration format (provider lines, `DIRECT`/`RESELLER`, optional directives).
-- Brand **fragment** delivery: `<article role="complementary" class="abc-card">`, ~2 KB, under 1 000 tokens.
+- Brand **card** delivery: `<article role="complementary" class="abc-card">`, ~2 KB, under 1 000 tokens.
 - Fragment endpoint behavior contract (`200` card / `204` no-fill, cacheable by URL).
   Classification is done at the publisher's edge, which calls the endpoint for
   AI-agent traffic only — so the response carries no `Vary: User-Agent`.

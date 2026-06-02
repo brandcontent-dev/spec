@@ -1,7 +1,7 @@
 # ABC reference adapter — Varnish (self-hosted)
 #
 # Resolve the <esi:include> tag (see esi-tag.html) ONLY for AI agents, so a
-# human request never triggers a fragment call. Classification is a single
+# human request never triggers a card request. Classification is a single
 # User-Agent match against the published agent list (schema/agents.json) —
 # keep this regex in sync with that file.
 #
@@ -14,7 +14,7 @@ sub vcl_backend_response {
     }
 }
 
-# The client User-Agent is forwarded to the fragment subrequest by default
+# The client User-Agent is forwarded to the card subrequest by default
 # (the provider may use it for reporting, not classification). If your setup
 # strips it, re-attach it on the /fragment subrequest:
 #

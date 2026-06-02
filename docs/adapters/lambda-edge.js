@@ -2,8 +2,8 @@
 //
 // CloudFront has no native ESI. Attach this as an "origin-response" trigger
 // on your distribution: it classifies the request at the edge and, for AI
-// agents only, fetches the brand fragment from your provider and inlines it.
-// Humans get the page unchanged and never trigger a fragment call.
+// agents only, fetches the brand card from your provider and inlines it.
+// Humans get the page unchanged and never trigger a card request.
 //
 // Config: set FRAGMENT_ENDPOINT below to the full URL your provider gives you
 // (Lambda@Edge has no env vars — inline the value or read it from a config).
@@ -51,7 +51,7 @@ exports.handler = async (event) => {
   if (!ct.includes("text/html") || !response.body) return response;
 
   const ua = (request.headers["user-agent"] || [{}])[0].value || "";
-  // Classify at the edge: only AI agents get a fragment call. The UA is then
+  // Classify at the edge: only AI agents get a card request. The UA is then
   // forwarded for the provider's reporting only (it does not affect the card).
   if (!AGENT_UA.test(ua)) return response;
 
