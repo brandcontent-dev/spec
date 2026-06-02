@@ -30,7 +30,7 @@ mkdocs build --strict   # output to ./site
 mkdocs.yml                        site config (Material theme)
 CHANGELOG.md  CONTRIBUTING.md      governance
 docs/
-├── index.md                      the spec (problem, diagram, fragment, provider, abc.txt)
+├── index.md                      the spec (problem, diagram, card, provider, abc.txt, why now)
 ├── integration.md                4 reference architectures + which-CDN decision tree
 ├── agents.md                     AI-agent classification (family / purpose)
 ├── getting-started.md            publisher adoption path

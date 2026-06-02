@@ -1,6 +1,6 @@
 # Integration
 
-A publisher's job in ABC is small: take the fragment your provider returns and
+A publisher's job in ABC is small: take the card your provider returns and
 **inline it into the page before it reaches the agent**. How you inline depends on
 your CDN. Every path below is copy-paste, and the real files live in
 [`adapters/`](https://github.com/brandcontent-dev/spec/tree/main/docs/adapters).
@@ -42,8 +42,8 @@ Then enable ESI on your `text/html` responses:
 - **Varnish** — [`adapters/varnish.vcl`](adapters/varnish.vcl): `set beresp.do_esi = true;`
 
 Gate ESI on the `User-Agent` so the `<esi:include>` resolves **only for AI agents**
-(see [Agents](agents.md) for the list) — a human request never triggers a fragment
-call. The fragment response is then cacheable by URL with no `Vary: User-Agent`.
+(see [Agents](agents.md) for the list) — a human request never triggers a card
+request. The response is then cacheable by URL with no `Vary: User-Agent`.
 
 !!! warning "Hidden Varnish behind another CDN"
     If your public CDN is Cloudflare or CloudFront but you run a Varnish underneath,
@@ -55,7 +55,7 @@ call. The fragment response is then cacheable by URL with no `Vary: User-Agent`.
 
 ## Cloudflare Worker
 
-Cloudflare has no native ESI. A small Worker plays the same role — fetch the fragment,
+Cloudflare has no native ESI. A small Worker plays the same role — fetch the card,
 inline it with `HTMLRewriter`. → [`adapters/cloudflare-worker.js`](adapters/cloudflare-worker.js)
 
 ```js
@@ -63,14 +63,14 @@ inline it with `HTMLRewriter`. → [`adapters/cloudflare-worker.js`](adapters/cl
 ```
 
 Deploy with `npx wrangler deploy`. The Worker classifies the request from the
-`User-Agent` (the [agent list](agents.md)) and fetches the fragment **only for AI
+`User-Agent` (the [agent list](agents.md)) and fetches the card **only for AI
 agents** — human traffic is passed straight through.
 
 ---
 
 ## CloudFront (Lambda@Edge)
 
-Same idea as an `origin-response` Lambda: fetch the fragment, append it before
+Same idea as an `origin-response` Lambda: fetch the card, append it before
 `</body>`. → [`adapters/lambda-edge.js`](adapters/lambda-edge.js)
 
 ```js
@@ -95,7 +95,7 @@ won't see the card — prefer ESI or an edge worker when you can.
 
 Classification happens **once, at your edge**, before the cache: match the request's
 `User-Agent` against the published [agent list](agents.md) (`schema/agents.json` —
-word-boundary, case-insensitive). Only a match triggers a fragment call; everyone
-else gets the page unchanged. Keeping the decision at the edge means the fragment
-response is cacheable by URL — the same card is reused across agents — and a human
-request never reaches the provider.
+word-boundary, case-insensitive). Only a match triggers a card request; everyone
+else gets the page unchanged. Keeping the decision at the edge means the response is
+cacheable by URL — the same card is reused across agents — and a human request never
+reaches the provider.

@@ -2,8 +2,8 @@
 //
 // Cloudflare has no native ESI, so a small Worker plays the same role:
 // classify the request at the edge and, for AI agents only, fetch the brand
-// fragment from your provider and inline it. Humans get the page unchanged
-// and never trigger a fragment call.
+// card from your provider and inline it. Humans get the page unchanged
+// and never trigger a card request.
 //
 // Config (wrangler.toml [vars] / secret):
 //   FRAGMENT_ENDPOINT  full URL your provider gives you (carries their
@@ -22,11 +22,11 @@ export default {
     const contentType = res.headers.get("content-type") || "";
     if (!contentType.includes("text/html")) return res;
 
-    // Classify at the edge: only AI agents get a fragment call.
+    // Classify at the edge: only AI agents get a card request.
     const ua = request.headers.get("User-Agent") || "";
     if (!AGENT_UA.test(ua)) return res;
 
-    // Build the fragment request: provider URL + this page. The UA is
+    // Build the card request: provider URL + this page. The UA is
     // forwarded for the provider's reporting only (it does not affect the card).
     const frag = new URL(env.FRAGMENT_ENDPOINT);
     frag.searchParams.set("page_url", request.url);
