@@ -9,7 +9,6 @@ are frozen.
 
 - Vocabulary: the deliverable is the **card**; "fragment" now refers only to the
   provider's **fragment endpoint** (the channel the edge calls).
-- Add a **"Why now?"** section with cited 2025-2026 evidence on the agentic web.
 - Add **agent-verification** guidance (reverse-DNS, published IP ranges, CDN
   verified-bot signals) as the site's responsibility.
 - Surface the Integration guide from the home page; number the How-it-works diagram.
