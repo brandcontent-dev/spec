@@ -9,7 +9,7 @@
 
 sub vcl_backend_response {
     if (beresp.http.Content-Type ~ "text/html" &&
-        bereq.http.User-Agent ~ "(?i)(GPTBot|ChatGPT-User|OAI-SearchBot|ClaudeBot|Claude-Web|anthropic-ai|Google-Extended|Google-CloudVertexBot|Applebot-Extended|PerplexityBot|Perplexity-User|CCBot|Meta-ExternalAgent|meta-externalfetcher|FacebookBot|Bytespider|cohere-ai|YouBot|Diffbot|MistralAI-User|Amazonbot)") {
+        bereq.http.User-Agent ~ "(?i)(GPTBot|ChatGPT-User|OAI-SearchBot|ClaudeBot|Claude-User|Claude-SearchBot|Google-CloudVertexBot|PerplexityBot|Perplexity-User|CCBot|Meta-ExternalAgent|meta-externalfetcher|Bytespider|YouBot|Diffbot|MistralAI-User|Amazonbot)") {
         set beresp.do_esi = true;
     }
 }

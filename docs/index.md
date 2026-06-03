@@ -3,7 +3,7 @@
 **A spec for publishers to serve AI agents sponsored brand content matched to the
 page — and get paid for bot traffic.**
 
-!!! info "Spec v0.1 · 2026-05-28"
+!!! info "Spec v0.2 · 2026-06-03"
     Early public draft. The format is usable today and open to feedback; details
     may change before v1.0.
 

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Agentic Brand Content — Fragment endpoint
-  version: "0.1"
+  version: "0.2"
   description: >
     Provider-neutral contract for an ABC fragment endpoint. A provider exposes
     this endpoint; a publisher's edge (ESI tag, Worker, Lambda) calls it and
@@ -40,7 +40,8 @@ paths:
             default: html
           description: >
             html (default) returns the card as text/html; json returns the
-            structured card object; both returns json plus a rendered html field.
+            structured card object (card.schema.json); both returns a JSON
+            envelope { card, html } where html is the rendered card.
       responses:
         "200":
           description: A brand is eligible for the page — the card.
@@ -58,7 +59,20 @@ paths:
                 description: One <article role="complementary" class="abc-card"> block.
             application/json:
               schema:
-                $ref: "card.schema.json"
+                oneOf:
+                  # format=json — the card object
+                  - $ref: "card.schema.json"
+                  # format=both — the card plus its rendered HTML
+                  - type: object
+                    additionalProperties: false
+                    required: [card, html]
+                    properties:
+                      card:
+                        $ref: "card.schema.json"
+                      html:
+                        type: string
+                        description: >
+                          Rendered <article class="abc-card"> HTML, ready to inline.
         "204":
           description: No eligible brand for this page (no-fill). Empty body.
         "400":

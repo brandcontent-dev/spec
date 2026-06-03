@@ -4,5 +4,6 @@ __pycache__/
 .DS_Store
 .wrangler/
 
-# Internal PM skill — not for the public repo
+# Local agent / tooling state
 .claude/
+.agents/

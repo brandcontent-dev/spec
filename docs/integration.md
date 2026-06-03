@@ -18,9 +18,9 @@ placeholder for that URL.
 | **AWS CloudFront** | [Lambda@Edge](#cloudfront-lambdaedge) | ~40-line function |
 | **No CDN control / SPA** | [Browser JS](#browser-js) | ~10 lines (fallback) |
 
-In a 2026 survey of the top ~200 French media sites, ESI-capable CDNs (Akamai,
-Fastly, self-hosted Varnish) covered ~46% of live sites and Cloudflare/CloudFront
-~49% — so the two main paths (ESI and a small edge worker) cover the large majority.
+Most publisher CDNs are either ESI-capable (Akamai, Fastly, self-hosted Varnish) or
+support a small edge function (Cloudflare, CloudFront) — so the two main paths, an ESI
+tag and a small edge worker, cover the large majority of stacks.
 
 > Don't know your CDN? `curl -sI https://yoursite.com/ | grep -iE 'server|via|cf-ray|x-amz-cf|x-served-by'` usually reveals it.
 

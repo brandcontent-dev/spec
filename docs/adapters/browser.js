@@ -15,7 +15,7 @@
 
 // Agent markers — keep in sync with schema/agents.json (word-boundary, case-insensitive).
 const AGENT_UA =
-  /\b(GPTBot|ChatGPT-User|OAI-SearchBot|ClaudeBot|Claude-Web|anthropic-ai|Google-Extended|Google-CloudVertexBot|Applebot-Extended|PerplexityBot|Perplexity-User|CCBot|Meta-ExternalAgent|meta-externalfetcher|FacebookBot|Bytespider|cohere-ai|YouBot|Diffbot|MistralAI-User|Amazonbot)\b/i;
+  /\b(GPTBot|ChatGPT-User|OAI-SearchBot|ClaudeBot|Claude-User|Claude-SearchBot|Google-CloudVertexBot|PerplexityBot|Perplexity-User|CCBot|Meta-ExternalAgent|meta-externalfetcher|Bytespider|YouBot|Diffbot|MistralAI-User|Amazonbot)\b/i;
 
 (async () => {
   if (!AGENT_UA.test(navigator.userAgent || "")) return; // humans: no fetch, no card

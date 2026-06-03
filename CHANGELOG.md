@@ -5,13 +5,20 @@ The spec follows a simple `MAJOR.MINOR` version: `MINOR` for additive or
 clarifying changes, `MAJOR` once the `abc.txt` format and fragment contract
 are frozen.
 
-## Unreleased
+## 0.2 — 2026-06-03
 
 - Vocabulary: the deliverable is the **card**; "fragment" now refers only to the
   provider's **fragment endpoint** (the channel the edge calls).
-- Add **agent-verification** guidance (reverse-DNS, published IP ranges, CDN
-  verified-bot signals) as the site's responsibility.
+- Correct the known-agents list against current vendor docs: drop robots.txt-only
+  control tokens (`Google-Extended`, `Applebot-Extended`), drop deprecated/unconfirmed
+  tokens (`Claude-Web`, `anthropic-ai`, `cohere-ai`, `FacebookBot`), add `Claude-User`
+  and `Claude-SearchBot`, and reclassify `Google-CloudVertexBot` as `search`.
+- Fix the fragment-endpoint contract: `format=both` returns a JSON envelope
+  `{ card, html }` (the card stays a pure object; rendered HTML is a sibling field).
+- Add agent-verification guidance (reverse-DNS, published IP ranges, CDN verified-bot
+  signals) as the site's responsibility.
 - Surface the Integration guide from the home page; number the How-it-works diagram.
+- Pin `mkdocs-material`; add a build-check CI workflow.
 
 ## 0.1 — 2026-05-28
 

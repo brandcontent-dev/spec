@@ -15,7 +15,7 @@ the page.
 The published spec lives at **https://brandcontent.dev** and is built from this repo
 with MkDocs Material.
 
-## Develop
+## Local preview
 
 ```bash
 python3 -m venv .venv && . .venv/bin/activate
