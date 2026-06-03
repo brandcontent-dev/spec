@@ -3,7 +3,7 @@
 ABC serves a card **only to AI agents**, and nothing to humans. Your edge makes that
 call: it matches the request's `User-Agent` against this list, and only a match
 triggers a card request. The list stays conservative — only well-known,
-vendor-published markers — so a human is never mistaken for an agent.
+vendor-published markers — which minimizes accidental matches.
 
 Matching is **word-boundary, case-insensitive**. The machine-readable list your edge
 deploys is [`schema/agents.json`](schema/agents.json).
@@ -31,23 +31,23 @@ Each agent carries two axes used for targeting and reporting:
 | `ChatGPT-User` | openai | query |
 | `OAI-SearchBot` | openai | search |
 | `ClaudeBot` | anthropic | training |
-| `Claude-Web` | anthropic | query |
-| `anthropic-ai` | anthropic | unknown |
-| `Google-Extended` | google | training |
-| `Google-CloudVertexBot` | google | query |
-| `Applebot-Extended` | apple | training |
+| `Claude-User` | anthropic | query |
+| `Claude-SearchBot` | anthropic | search |
+| `Google-CloudVertexBot` | google | search |
 | `PerplexityBot` | perplexity | search |
 | `Perplexity-User` | perplexity | query |
 | `CCBot` | commoncrawl | training |
 | `Meta-ExternalAgent` | meta | training |
 | `meta-externalfetcher` | meta | query |
-| `FacebookBot` | meta | unknown |
 | `Bytespider` | bytedance | training |
-| `cohere-ai` | cohere | training |
 | `YouBot` | you | search |
 | `Diffbot` | diffbot | training |
 | `MistralAI-User` | mistral | query |
 | `Amazonbot` | amazon | unknown |
+
+Markers are **HTTP User-Agent strings**. Robots.txt-only *control* tokens — such as
+`Google-Extended` and `Applebot-Extended` — are deliberately excluded: they never appear
+in a request's `User-Agent`, so they can't identify a live fetch.
 
 The list evolves with each spec version. Propose additions or corrections via the
 [repo](https://github.com/brandcontent-dev/spec).
